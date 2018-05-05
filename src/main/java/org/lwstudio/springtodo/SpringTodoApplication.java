@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.stream.Collectors;
+
 @Controller
 @SpringBootApplication
 public class SpringTodoApplication {
@@ -19,12 +21,6 @@ public class SpringTodoApplication {
 	@ResponseBody
 	String home() {
 		return "Hello World!";
-	}
-
-	@RequestMapping("/todos")
-	@ResponseBody
-	String todos() {
-		return this.repository.findAll();
 	}
 
 	public static void main(String[] args) {

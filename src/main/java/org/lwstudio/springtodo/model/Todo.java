@@ -9,14 +9,14 @@ import javax.persistence.Id;
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String description;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -26,10 +26,5 @@ public class Todo {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Todo [id=$s, description=$s]", this.id, this.description);
     }
 }
