@@ -10,6 +10,7 @@ public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long userId;
     private String description;
 
     public Long getId() {
@@ -26,5 +27,13 @@ public class Todo {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
