@@ -28,14 +28,9 @@
 
     <delete id="deleteUserById">
         DELETE FROM
-            todo
+          user
         WHERE
-            user_id = #{id}
-
-        DELETE FROM
-            user
-        WHERE
-            id = #{id}
+          id = #{id}
     </delete>
 
     <select id="selectUserById" resultMap="user">

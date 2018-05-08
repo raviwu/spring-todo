@@ -14,4 +14,6 @@ public interface UserRepository {
 
     Integer updateUserById(User user);
 
+    Integer deleteUserById(Long id);
+
 }

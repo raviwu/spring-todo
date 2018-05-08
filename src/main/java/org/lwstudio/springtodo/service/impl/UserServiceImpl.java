@@ -2,6 +2,7 @@ package org.lwstudio.springtodo.service.impl;
 
 import org.lwstudio.springtodo.model.entity.User;
 import org.lwstudio.springtodo.repository.UserRepository;
+import org.lwstudio.springtodo.repository.TodoRepository;
 import org.lwstudio.springtodo.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,12 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
+  private final TodoRepository todoRepository;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository) {
+  public UserServiceImpl(UserRepository userRepository, TodoRepository todoRepository) {
     this.userRepository = userRepository;
+    this.todoRepository = todoRepository;
   }
 
   @Override
@@ -40,6 +43,14 @@ public class UserServiceImpl implements UserService {
   @Override
   public boolean modifyUserById(User user) {
     return userRepository.updateUserById(user) > 0;
+  }
+
+  @Override
+  @Transactional
+  public boolean deleteUserById(Long id) {
+    todoRepository.deleteTodosByUserId(id);
+
+    return userRepository.deleteUserById(id) > 0;
   }
 
 }

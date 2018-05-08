@@ -62,4 +62,11 @@
             user_id = #{userId}
     </select>
 
+    <delete id="deleteTodosByUserId">
+        DELETE FROM
+          todo
+        WHERE
+          user_id = #{userId}
+    </delete>
+
 </mapper>
