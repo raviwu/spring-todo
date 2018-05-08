@@ -10,9 +10,9 @@
 
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO
-            user (id, username, password)
+            user (username, password, created_at, updated_at)
         VALUES
-        (#{id}, #{username}, #{password}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        (#{username}, #{password}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     </insert>
 
     <update id="updateUserOnPasswordById">

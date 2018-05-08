@@ -26,4 +26,10 @@ public class UserServiceImpl implements UserService {
     return userRepository.selectAllUsers();
   }
 
+  @Override
+  @Transactional
+  public boolean saveUser(User user) {
+    return userRepository.insertUser(user) > 0;
+  }
+
 }

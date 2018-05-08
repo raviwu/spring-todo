@@ -8,4 +8,6 @@ public interface UserService {
 
     List<User> getAllUsers();
 
+    boolean saveUser(User user);
+
 }
