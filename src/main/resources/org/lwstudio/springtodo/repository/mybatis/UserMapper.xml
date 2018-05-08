@@ -10,50 +10,46 @@
 
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO
-        user (id, username, password)
+            user (id, username, password)
         VALUES
         (#{id}, #{username}, #{password}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     </insert>
 
     <update id="updateUserOnPasswordById">
         UPDATE
-        user
+            user
         SET
-        updated_at = CURRENT_TIMESTAMP
+            updated_at = CURRENT_TIMESTAMP
         WHERE
-        id = #{id}
+            id = #{id}
     </update>
 
     <delete id="deleteUserById">
         DELETE FROM
-        user
+            todo
         WHERE
-        id = #{id}
+            user_id = #{id}
+
+        DELETE FROM
+            user
+        WHERE
+            id = #{id}
     </delete>
 
     <select id="selectUserById" resultMap="user">
         SELECT
-        *
+            *
         FROM
-        user
+            user
         WHERE
-        id = #{id}
-    </select>
-
-    <select id="selectUserByUsername" resultMap="user">
-        SELECT
-        *
-        FROM
-        user
-        WHERE
-        username = #{username}
+            id = #{id}
     </select>
 
     <select id="selectAllUsers" resultMap="user">
         SELECT
-        *
+            *
         FROM
-        user
+            user
     </select>
 
 </mapper>
