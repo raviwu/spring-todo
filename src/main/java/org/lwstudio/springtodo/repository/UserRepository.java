@@ -10,4 +10,6 @@ public interface UserRepository {
 
     Integer insertUser(User user);
 
+    Integer updateUserById(User user);
+
 }

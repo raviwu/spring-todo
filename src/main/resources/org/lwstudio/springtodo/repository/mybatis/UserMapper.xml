@@ -15,10 +15,12 @@
         (#{username}, #{password}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     </insert>
 
-    <update id="updateUserOnPasswordById">
+    <update id="updateUserById">
         UPDATE
             user
         SET
+            username = #{username},
+            password = #{password},
             updated_at = CURRENT_TIMESTAMP
         WHERE
             id = #{id}

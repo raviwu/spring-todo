@@ -10,4 +10,6 @@ public interface UserService {
 
     boolean saveUser(User user);
 
+    boolean modifyUserById(User user);
+
 }
