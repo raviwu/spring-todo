@@ -8,6 +8,8 @@ public interface UserRepository {
 
     List<User> selectAllUsers();
 
+    User selectUserById(Long id);
+
     Integer insertUser(User user);
 
     Integer updateUserById(User user);
