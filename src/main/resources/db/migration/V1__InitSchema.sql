@@ -1,19 +1,21 @@
-DROP TABLE todo IF EXISTS;
-DROP TABLE user IF EXISTS;
+CREATE TABLE appuser (
+    id            BIGSERIAL PRIMARY KEY,
+    username      VARCHAR(80),
+    password      VARCHAR(80),
+    updated_at    TIMESTAMP,
+    created_at    TIMESTAMP
+);
 
 CREATE TABLE todo (
-  id            BIGINT IDENTITY PRIMARY KEY,
-  user_id       BIGINT,
-  description   text,
-  completed_at  DATETIME,
-  updated_at    DATETIME,
-  created_at    DATETIME
+    id            BIGSERIAL PRIMARY KEY,
+    user_id       BIGINT,
+    description   TEXT,
+    completed_at  TIMESTAMP,
+    updated_at    TIMESTAMP,
+    created_at    TIMESTAMP
 );
 
-CREATE TABLE user (
-  id            BIGINT IDENTITY PRIMARY KEY,
-  username      VARCHAR(80),
-  password      VARCHAR(80),
-  updated_at    DATETIME,
-  created_at    DATETIME
-);
+ALTER TABLE todo
+    ADD CONSTRAINT fk_user_on_todo
+    FOREIGN KEY (user_id)
+    REFERENCES appuser (id);

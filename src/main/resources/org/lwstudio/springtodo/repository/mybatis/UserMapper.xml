@@ -10,14 +10,14 @@
 
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO
-            user (username, password, created_at, updated_at)
+            appuser (username, password, created_at, updated_at)
         VALUES
         (#{username}, #{password}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     </insert>
 
     <update id="updateUserById">
         UPDATE
-            user
+            appuser
         SET
             username = #{username},
             password = #{password},
@@ -28,7 +28,7 @@
 
     <delete id="deleteUserById">
         DELETE FROM
-          user
+          appuser
         WHERE
           id = #{id}
     </delete>
@@ -37,7 +37,7 @@
         SELECT
             *
         FROM
-            user
+            appuser
         WHERE
             id = #{id}
     </select>
@@ -46,7 +46,7 @@
         SELECT
             *
         FROM
-            user
+            appuser
     </select>
 
 </mapper>
