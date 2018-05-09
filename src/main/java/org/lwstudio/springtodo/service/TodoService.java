@@ -12,4 +12,7 @@ public interface TodoService {
     Optional<Todo> getTodoById(Long id);
 
     boolean modifyTodoDescriptionById(Todo todo);
+
+    Optional<Todo> completeTodoById(Long id);
+
 }

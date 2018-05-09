@@ -37,4 +37,11 @@ public class TodoServiceImpl implements TodoService {
         return todoRepository.updateTodoOnDescriptionById(todo) > 0;
     }
 
+    @Override
+    public Optional<Todo> completeTodoById(Long id) {
+        todoRepository.completeTodoById(id);
+
+        return Optional.ofNullable(todoRepository.selectTodoById(id));
+    }
+
 }

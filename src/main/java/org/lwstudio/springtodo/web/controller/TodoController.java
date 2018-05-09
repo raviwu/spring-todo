@@ -42,4 +42,10 @@ public class TodoController {
         return ResponseEntity.status(HttpStatus.OK).body(todoService.getTodoById(id));
     }
 
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<?> updateTodoDescriptionById(@PathVariable Long id) {
+        todoService.completeTodoById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(todoService.getTodoById(id));
+    }
 }

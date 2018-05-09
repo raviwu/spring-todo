@@ -15,4 +15,6 @@ public interface TodoRepository {
 
     Integer updateTodoOnDescriptionById(Todo todo);
 
+    boolean completeTodoById(Long id);
+
 }
