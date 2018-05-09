@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TodoServiceImpl implements TodoService {
@@ -28,8 +27,33 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
+    @Transactional
+    public boolean saveTodo(Todo todo) {
+        return todoRepository.insertTodo(todo) > 0;
+    }
+
+    @Override
     public Optional<Todo> getTodoById(Long id) {
         return Optional.ofNullable(todoRepository.selectTodoById(id));
     }
 
+    @Override
+    @Transactional
+    public boolean modifyTodoDescriptionById(Todo todo) {
+        return todoRepository.updateTodoOnDescriptionById(todo) > 0;
+    }
+
+    @Override
+    @Transactional
+    public Optional<Todo> completeTodoById(Long id) {
+        todoRepository.completeTodoById(id);
+
+        return Optional.ofNullable(todoRepository.selectTodoById(id));
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteTodoById(Long id) {
+        return todoRepository.deleteTodoById(id) > 0;
+    }
 }

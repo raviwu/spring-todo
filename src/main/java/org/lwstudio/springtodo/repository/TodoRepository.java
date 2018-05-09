@@ -3,7 +3,6 @@ package org.lwstudio.springtodo.repository;
 import org.lwstudio.springtodo.model.entity.Todo;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TodoRepository {
 
@@ -11,6 +10,14 @@ public interface TodoRepository {
 
     Todo selectTodoById(Long id);
 
+    Integer insertTodo(Todo todo);
+
     Integer deleteTodosByUserId(Long userId);
+
+    Integer updateTodoOnDescriptionById(Todo todo);
+
+    boolean completeTodoById(Long id);
+
+    Integer deleteTodoById(Long id);
 
 }

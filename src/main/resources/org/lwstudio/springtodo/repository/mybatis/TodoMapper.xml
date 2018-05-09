@@ -22,7 +22,7 @@
         UPDATE
             todo
         SET
-            description = #{description}
+            description = #{description},
             updated_at = CURRENT_TIMESTAMP
         WHERE
             id = #{id}
