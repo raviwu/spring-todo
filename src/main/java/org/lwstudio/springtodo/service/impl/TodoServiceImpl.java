@@ -33,15 +33,22 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
+    @Transactional
     public boolean modifyTodoDescriptionById(Todo todo) {
         return todoRepository.updateTodoOnDescriptionById(todo) > 0;
     }
 
     @Override
+    @Transactional
     public Optional<Todo> completeTodoById(Long id) {
         todoRepository.completeTodoById(id);
 
         return Optional.ofNullable(todoRepository.selectTodoById(id));
     }
 
+    @Override
+    @Transactional
+    public boolean deleteTodoById(Long id) {
+        return todoRepository.deleteTodoById(id) > 0;
+    }
 }

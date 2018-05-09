@@ -15,4 +15,5 @@ public interface TodoService {
 
     Optional<Todo> completeTodoById(Long id);
 
+    boolean deleteTodoById(Long id);
 }

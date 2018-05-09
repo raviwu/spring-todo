@@ -17,4 +17,6 @@ public interface TodoRepository {
 
     boolean completeTodoById(Long id);
 
+    Integer deleteTodoById(Long id);
+
 }
