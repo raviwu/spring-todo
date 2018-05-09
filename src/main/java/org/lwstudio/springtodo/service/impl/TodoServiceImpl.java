@@ -27,6 +27,12 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
+    @Transactional
+    public boolean saveTodo(Todo todo) {
+        return todoRepository.insertTodo(todo) > 0;
+    }
+
+    @Override
     public Optional<Todo> getTodoById(Long id) {
         return Optional.ofNullable(todoRepository.selectTodoById(id));
     }

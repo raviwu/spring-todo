@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/users/{userId}/todos")
@@ -27,6 +29,19 @@ public class TodoController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getTodoById(@PathVariable Long id) {
         return ResponseEntity.ok(todoService.getTodoById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<?> postTodo(@PathVariable Long userId, @RequestBody Todo todo) {
+
+        todo.setUserId(userId);
+        todoService.saveTodo(todo);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(todo.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(todoService.getTodoById(todo.getId()));
+
     }
 
     @PutMapping("/{id}")
