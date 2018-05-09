@@ -6,6 +6,8 @@ import java.util.Date;
 
 @Entity
 public class User implements Serializable {
+    private static final long serialVersionUID = 6805190293149476515L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

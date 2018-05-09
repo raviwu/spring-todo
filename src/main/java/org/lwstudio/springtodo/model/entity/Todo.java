@@ -6,6 +6,8 @@ import java.util.Date;
 
 @Entity
 public class Todo implements Serializable {
+    private static final long serialVersionUID = 6505147293149474785L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
