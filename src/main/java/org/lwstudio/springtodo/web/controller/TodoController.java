@@ -1,5 +1,6 @@
 package org.lwstudio.springtodo.web.controller;
 
+import org.lwstudio.springtodo.model.entity.Todo;
 import org.lwstudio.springtodo.service.TodoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
+
+import javax.xml.ws.Response;
 
 @RestController
 @RequestMapping("/api/users/{userId}/todos")
@@ -29,4 +32,14 @@ public class TodoController {
     public ResponseEntity<?> getTodoById(@PathVariable Long id) {
         return ResponseEntity.ok(todoService.getTodoById(id));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateTodoDescriptionById(@PathVariable Long id, @RequestBody Todo todo) {
+        todo.setId(id);
+
+        todoService.modifyTodoDescriptionById(todo);
+
+        return ResponseEntity.status(HttpStatus.OK).body(todoService.getTodoById(id));
+    }
+
 }

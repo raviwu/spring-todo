@@ -32,4 +32,9 @@ public class TodoServiceImpl implements TodoService {
         return Optional.ofNullable(todoRepository.selectTodoById(id));
     }
 
+    @Override
+    public boolean modifyTodoDescriptionById(Todo todo) {
+        return todoRepository.updateTodoOnDescriptionById(todo) > 0;
+    }
+
 }

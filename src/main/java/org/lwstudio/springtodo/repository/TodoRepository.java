@@ -13,4 +13,6 @@ public interface TodoRepository {
 
     Integer deleteTodosByUserId(Long userId);
 
+    Integer updateTodoOnDescriptionById(Todo todo);
+
 }
