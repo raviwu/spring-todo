@@ -14,42 +14,42 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-  private final UserRepository userRepository;
-  private final TodoRepository todoRepository;
+    private final UserRepository userRepository;
+    private final TodoRepository todoRepository;
 
-  @Autowired
-  public UserServiceImpl(UserRepository userRepository, TodoRepository todoRepository) {
-    this.userRepository = userRepository;
-    this.todoRepository = todoRepository;
-  }
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, TodoRepository todoRepository) {
+        this.userRepository = userRepository;
+        this.todoRepository = todoRepository;
+    }
 
-  @Override
-  public List<User> getAllUsers() {
-    return userRepository.selectAllUsers();
-  }
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.selectAllUsers();
+    }
 
-  @Override
-  public User getUserById(Long id) {
-    return userRepository.selectUserById(id);
-  }
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.selectUserById(id);
+    }
 
-  @Override
-  @Transactional
-  public boolean saveUser(User user) {
-    return userRepository.insertUser(user) > 0;
-  }
+    @Override
+    @Transactional
+    public boolean saveUser(User user) {
+        return userRepository.insertUser(user) > 0;
+    }
 
-  @Override
-  public boolean modifyUserById(User user) {
-    return userRepository.updateUserById(user) > 0;
-  }
+    @Override
+    public boolean modifyUserById(User user) {
+        return userRepository.updateUserById(user) > 0;
+    }
 
-  @Override
-  @Transactional
-  public boolean deleteUserById(Long id) {
-    todoRepository.deleteTodosByUserId(id);
+    @Override
+    @Transactional
+    public boolean deleteUserById(Long id) {
+        todoRepository.deleteTodosByUserId(id);
 
-    return userRepository.deleteUserById(id) > 0;
-  }
+        return userRepository.deleteUserById(id) > 0;
+    }
 
 }

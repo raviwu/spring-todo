@@ -8,8 +8,8 @@ import org.springframework.stereotype.Controller;
 @SpringBootApplication
 public class SpringTodoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SpringTodoApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SpringTodoApplication.class, args);
+    }
 
 }
