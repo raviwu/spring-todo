@@ -1,4 +1,4 @@
-https://travis-ci.org/raviwu/spring-todo.svg?branch=master
+![alt text](https://travis-ci.org/raviwu/spring-todo.svg?branch=master)
 
 ---
 
