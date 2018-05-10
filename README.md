@@ -1,3 +1,7 @@
+https://travis-ci.org/raviwu/spring-todo.svg?branch=master
+
+---
+
 ## Description
 
 This is a sample Spring API DEMO.

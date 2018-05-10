@@ -4,8 +4,3 @@ jdk:
   - oraclejdk8
 script:
   - ./mvnw clean test -Dspring.profiles.active=test -B
-deploy:
-  provider: heroku
-  api-key:
-    secure: $HEROKU_API_KEY
-  app: springtododemo
