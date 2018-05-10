@@ -20,6 +20,14 @@ public class User implements Serializable {
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
 
+    public User() {
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public Long getId() {
         return id;
     }
