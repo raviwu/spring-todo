@@ -1,4 +1,4 @@
-package org.lwstudio.springtodo.security;
+package org.lwstudio.springtodo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

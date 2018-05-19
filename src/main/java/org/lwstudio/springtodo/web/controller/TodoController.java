@@ -1,7 +1,14 @@
 package org.lwstudio.springtodo.web.controller;
 
+import org.lwstudio.springtodo.constant.ResourceName;
+
+import org.lwstudio.springtodo.model.entity.User;
+import org.lwstudio.springtodo.service.UserService;
+
 import org.lwstudio.springtodo.model.entity.Todo;
 import org.lwstudio.springtodo.service.TodoService;
+
+import org.lwstudio.springtodo.exception.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,24 +22,32 @@ import java.net.URI;
 public class TodoController {
 
     private TodoService todoService;
+    private UserService userService;
 
     @Autowired
-    public TodoController(TodoService todoService) {
+    public TodoController(TodoService todoService, UserService userService) {
         this.todoService = todoService;
+        this.userService = userService;
     }
 
     @GetMapping
     public ResponseEntity<?> getTodosByUserId(@PathVariable Long userId) {
+        assertUserExist(userId);
+
         return ResponseEntity.ok(todoService.getTodosByUserId(userId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTodoById(@PathVariable Long id) {
+    public ResponseEntity<?> getTodoById(@PathVariable Long userId, @PathVariable Long id) {
+        assertUserExist(userId);
+        assertTodoExist(id);
+
         return ResponseEntity.ok(todoService.getTodoById(id));
     }
 
     @PostMapping
     public ResponseEntity<?> postTodo(@PathVariable Long userId, @RequestBody Todo todo) {
+        assertUserExist(userId);
 
         todo.setUserId(userId);
         todoService.saveTodo(todo);
@@ -45,7 +60,10 @@ public class TodoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateTodoDescriptionById(@PathVariable Long id, @RequestBody Todo todo) {
+    public ResponseEntity<?> updateTodoDescriptionById(@PathVariable Long userId, @PathVariable Long id, @RequestBody Todo todo) {
+        assertUserExist(userId);
+        assertTodoExist(id);
+
         todo.setId(id);
 
         todoService.modifyTodoDescriptionById(todo);
@@ -54,17 +72,47 @@ public class TodoController {
     }
 
     @PutMapping("/{id}/complete")
-    public ResponseEntity<?> updateTodoDescriptionById(@PathVariable Long id) {
+    public ResponseEntity<?> updateTodoDescriptionById(@PathVariable Long userId, @PathVariable Long id) {
+        assertUserExist(userId);
+        assertTodoExist(id);
+
         todoService.completeTodoById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(todoService.getTodoById(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTodo(@PathVariable Long id) {
+    public ResponseEntity<?> deleteTodo(@PathVariable Long userId, @PathVariable Long id) {
+        assertUserExist(userId);
+        assertTodoExist(id);
+
         todoService.deleteTodoById(id);
 
         return ResponseEntity.noContent().build();
     }
 
+    // Helper Method
+    private void assertUserExist(Long userId) {
+        User user = userService.getUserById(userId);
+
+        if (user == null) {
+            ResourceNotFoundException exception = new ResourceNotFoundException();
+            exception.setResourceName(ResourceName.USER);
+            exception.setId(userId);
+
+            throw exception;
+        }
+    }
+
+    private void assertTodoExist(Long id) {
+        Todo todo = todoService.getTodoById(id);
+
+        if (todo == null) {
+            ResourceNotFoundException exception = new ResourceNotFoundException();
+            exception.setResourceName(ResourceName.TODO);
+            exception.setId(id);
+
+            throw exception;
+        }
+    }
 }

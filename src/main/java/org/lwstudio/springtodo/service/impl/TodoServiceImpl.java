@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TodoServiceImpl implements TodoService {
@@ -33,8 +32,8 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public Optional<Todo> getTodoById(Long id) {
-        return Optional.ofNullable(todoRepository.selectTodoById(id));
+    public Todo getTodoById(Long id) {
+        return todoRepository.selectTodoById(id);
     }
 
     @Override
@@ -45,10 +44,10 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     @Transactional
-    public Optional<Todo> completeTodoById(Long id) {
+    public Todo completeTodoById(Long id) {
         todoRepository.completeTodoById(id);
 
-        return Optional.ofNullable(todoRepository.selectTodoById(id));
+        return todoRepository.selectTodoById(id);
     }
 
     @Override
