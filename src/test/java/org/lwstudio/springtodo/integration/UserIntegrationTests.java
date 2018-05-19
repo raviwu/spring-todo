@@ -38,7 +38,10 @@ public class UserIntegrationTests {
         ResponseEntity<User> responseEntity =
             restTemplate.postForEntity("/api/users", new User("Foo", "Bar"), User.class);
 
+        User user = responseEntity.getBody();
+
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+        assertEquals("Foo", user.getUsername());
     }
 
     @Test

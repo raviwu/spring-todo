@@ -42,6 +42,15 @@
             id = #{id}
     </select>
 
+    <select id="selectUserByUsername" resultMap="user">
+        SELECT
+            *
+        FROM
+            appuser
+        WHERE
+            username = #{username}
+    </select>
+
     <select id="selectAllUsers" resultMap="user">
         SELECT
             *
