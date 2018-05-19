@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("isFullyAuthenticated() and #id == principal.id")
+    @PreAuthorize("principal.id == #id")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         assertUserExist(id);
 
@@ -59,7 +59,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("isFullyAuthenticated() and #id == principal.id")
+    @PreAuthorize("principal.id == #id")
     public ResponseEntity<?> putUser(@PathVariable Long id, @RequestBody UserDTO userDTO) throws ValidationException {
         assertUserExist(id);
 
@@ -75,7 +75,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("isFullyAuthenticated() and #id == principal.id")
+    @PreAuthorize("principal.id == #id")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         assertUserExist(id);
 

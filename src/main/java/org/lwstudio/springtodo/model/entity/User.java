@@ -4,8 +4,6 @@ import javax.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -59,8 +57,4 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public List<String> getRoles() {
-        String[] defaultRoles = { "USER" };
-        return Arrays.asList(defaultRoles);
-    }
 }

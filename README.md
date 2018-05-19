@@ -37,7 +37,7 @@ Todo Resource:
 
 ## TODOs
 
-1. User Authentication Checks
+1. User Authentication Checks (Still Problematic, need time to investigate more)
 2. Request Param Validator
 3. Testing should covers main behaviors
 

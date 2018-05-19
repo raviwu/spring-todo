@@ -32,7 +32,9 @@ class ExceptionHandlerControllerAdvice {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<?> unauthorizedExceptionHandler(HttpServletRequest request, AccessDeniedException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDTO(403,
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorDTO(403,
                 "You're not authorized for this operation."));
     }
 

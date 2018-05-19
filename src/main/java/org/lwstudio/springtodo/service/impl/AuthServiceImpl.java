@@ -68,14 +68,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String refresh(String oldToken) {
-        final String token = oldToken.substring(tokenHead.length());
-        String username = jwtTokenUtil.getUsernameFromToken(token);
-        JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
-        return jwtTokenUtil.refreshToken(token);
-    }
-
-    @Override
     @Transactional
     public User register(JwtAuthenticationRequest jwtAuthenticationRequest) throws ValidationException {
         if (this.usernameExists(jwtAuthenticationRequest.getUsername())) {

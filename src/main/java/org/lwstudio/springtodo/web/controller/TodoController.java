@@ -20,6 +20,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/users/{userId}/todos")
+@PreAuthorize("principal.id == #userId")
 public class TodoController {
 
     private TodoService todoService;
@@ -32,7 +33,6 @@ public class TodoController {
     }
 
     @GetMapping
-    @PreAuthorize("isFullyAuthenticated() and #userId == principal.id")
     public ResponseEntity<?> getTodosByUserId(@PathVariable Long userId) {
         assertUserExist(userId);
 
@@ -40,7 +40,6 @@ public class TodoController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("isFullyAuthenticated() and #userId == principal.id")
     public ResponseEntity<?> getTodoById(@PathVariable Long userId, @PathVariable Long id) {
         assertUserExist(userId);
         assertTodoExist(id);
@@ -49,7 +48,6 @@ public class TodoController {
     }
 
     @PostMapping
-    @PreAuthorize("isFullyAuthenticated() and #userId == principal.id")
     public ResponseEntity<?> postTodo(@PathVariable Long userId, @RequestBody Todo todo) {
         assertUserExist(userId);
 
@@ -64,7 +62,6 @@ public class TodoController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("isFullyAuthenticated() and #userId == principal.id")
     public ResponseEntity<?> updateTodoDescriptionById(@PathVariable Long userId, @PathVariable Long id, @RequestBody Todo todo) {
         assertUserExist(userId);
         assertTodoExist(id);
@@ -77,7 +74,6 @@ public class TodoController {
     }
 
     @PutMapping("/{id}/complete")
-    @PreAuthorize("isFullyAuthenticated() and #userId == principal.id")
     public ResponseEntity<?> updateTodoDescriptionById(@PathVariable Long userId, @PathVariable Long id) {
         assertUserExist(userId);
         assertTodoExist(id);
@@ -88,7 +84,6 @@ public class TodoController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("isFullyAuthenticated() and #userId == principal.id")
     public ResponseEntity<?> deleteTodo(@PathVariable Long userId, @PathVariable Long id) {
         assertUserExist(userId);
         assertTodoExist(id);

@@ -10,6 +10,4 @@ public interface AuthService {
     String login(JwtAuthenticationRequest jwtAuthenticationRequest) throws ValidationException;
 
     User register(JwtAuthenticationRequest jwtAuthenticationRequest) throws ValidationException;
-
-    String refresh(String oldToken);
 }
