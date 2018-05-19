@@ -2,6 +2,7 @@ package org.lwstudio.springtodo.web.controller;
 
 import org.lwstudio.springtodo.service.UserService;
 import org.lwstudio.springtodo.model.entity.User;
+import org.lwstudio.springtodo.model.dto.RegistrationDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,18 +33,12 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> postUser(@RequestBody User user) {
-        userService.saveUser(user);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}/todos")
-                .buildAndExpand(user.getId())
-                .toUri();
+    public ResponseEntity<?> postUser(@RequestBody RegistrationDTO registrationDTO) {
+        userService.saveUser(registrationDTO);
 
         return ResponseEntity
-                .created(location)
-                .body(user);
+                .status(HttpStatus.CREATED)
+                .body("");
 
     }
 

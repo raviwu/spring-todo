@@ -1,6 +1,7 @@
 package org.lwstudio.springtodo.service.impl;
 
 import org.lwstudio.springtodo.model.entity.User;
+import org.lwstudio.springtodo.model.dto.RegistrationDTO;
 import org.lwstudio.springtodo.repository.UserRepository;
 import org.lwstudio.springtodo.repository.TodoRepository;
 import org.lwstudio.springtodo.service.UserService;
@@ -35,8 +36,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean saveUser(User user) {
-        return userRepository.insertUser(user) > 0;
+    public boolean saveUser(RegistrationDTO registrationDTO) {
+        return userRepository.insertUser(registrationDTO) > 0;
     }
 
     @Override

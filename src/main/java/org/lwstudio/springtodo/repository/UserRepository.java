@@ -1,6 +1,7 @@
 package org.lwstudio.springtodo.repository;
 
 import org.lwstudio.springtodo.model.entity.User;
+import org.lwstudio.springtodo.model.dto.RegistrationDTO;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface UserRepository {
 
     User selectUserById(Long id);
 
-    Integer insertUser(User user);
+    Integer insertUser(RegistrationDTO registrationDTO);
 
     Integer updateUserById(User user);
 
