@@ -22,11 +22,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final TodoRepository todoRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, TodoRepository todoRepository) {
         this.userRepository = userRepository;
         this.todoRepository = todoRepository;
+        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override
@@ -51,7 +53,7 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("Username already exists.");
         }
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(userDTO.getPassword());
+        String encryptedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword());
 
         try {
             User user = new User(
@@ -75,7 +77,7 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("New username already been used.");
         }
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(userDTO.getPassword());
+        String encryptedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword());
 
         try {
             user.setUsername(userDTO.getUsername());
