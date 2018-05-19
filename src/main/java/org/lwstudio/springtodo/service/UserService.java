@@ -1,6 +1,9 @@
 package org.lwstudio.springtodo.service;
 
+import org.lwstudio.springtodo.model.dto.UserDTO;
 import org.lwstudio.springtodo.model.entity.User;
+
+import org.lwstudio.springtodo.exception.ValidationException;
 
 import java.util.List;
 
@@ -10,9 +13,11 @@ public interface UserService {
 
     User getUserById(Long id);
 
-    boolean saveUser(User user);
+    User getUserByUsername(String username);
 
-    boolean modifyUserById(User user);
+    boolean saveUser(UserDTO UserDTO) throws ValidationException;
+
+    boolean modifyUserById(UserDTO UserDTO) throws ValidationException;
 
     boolean deleteUserById(Long id);
 

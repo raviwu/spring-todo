@@ -2,6 +2,8 @@ package org.lwstudio.springtodo.web.controller;
 
 import org.lwstudio.springtodo.service.UserService;
 import org.lwstudio.springtodo.model.entity.User;
+import org.lwstudio.springtodo.exception.ValidationException;
+import org.lwstudio.springtodo.model.dto.UserDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,8 +34,10 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> postUser(@RequestBody User user) {
-        userService.saveUser(user);
+    public ResponseEntity<?> postUser(@RequestBody UserDTO userDTO) throws ValidationException {
+        userService.saveUser(userDTO);
+
+        User user = userService.getUserByUsername(userDTO.getUsername());
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -41,21 +45,25 @@ public class UserController {
                 .buildAndExpand(user.getId())
                 .toUri();
 
+        userDTO.setId(user.getId());
+        userDTO.setPassword("hash_password");
+
         return ResponseEntity
                 .created(location)
-                .body(user);
-
+                .body(userDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> putUser(@PathVariable Long id, @RequestBody User user) {
-        user.setId(id);
+    public ResponseEntity<?> putUser(@PathVariable Long id, @RequestBody UserDTO userDTO) throws ValidationException {
+        userDTO.setId(id);
 
-        userService.modifyUserById(user);
+        userService.modifyUserById(userDTO);
+
+        userDTO.setPassword("hash_password");
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(user);
+                .body(userDTO);
     }
 
     @DeleteMapping("/{id}")

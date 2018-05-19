@@ -1,29 +1,14 @@
-package org.lwstudio.springtodo.model.entity;
+package org.lwstudio.springtodo.model.dto;
 
-import javax.persistence.*;
-
-import java.io.Serializable;
-import java.util.Date;
-
-@Entity
-public class User implements Serializable {
-    private static final long serialVersionUID = 6805190293149476515L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UserDTO {
     private Long id;
     private String username;
     private String password;
 
-    @Column(name = "updated_at")
-    private Date updatedAt;
-    @Column(name = "created_at", updatable = false)
-    private Date createdAt;
-
-    public User() {
+    public UserDTO() {
     }
 
-    public User(String username, String password) {
+    public UserDTO(String username, String password) {
         this.username = username;
         this.password = password;
     }

@@ -37,7 +37,7 @@ Todo Resource:
 
 ## TODOs
 
-1. User Password Hash
+1. Json should not response password key even with hashed password
 2. User Authentication Checks for the Todo Resources
 3. Request Param Validator
 4. Request Exception Handlement
