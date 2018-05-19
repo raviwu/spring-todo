@@ -37,10 +37,9 @@ Todo Resource:
 
 ## TODOs
 
-1. User Authentication Checks for the Todo Resources
+1. User Authentication Checks
 2. Request Param Validator
-3. Request Exception Handlement
-4. Testing should covers main behaviors
+3. Testing should covers main behaviors
 
 ## Run in Dev Env
 
