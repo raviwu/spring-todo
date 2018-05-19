@@ -18,13 +18,17 @@ Flyway DB Migration
 
 ## API Endpoint DEMO
 
+Authentication:
+
+1. `POST /auth/register` with `username` and `password`
+2. `POST /auth/login` with `username` and `password` to get JWT token
+
 User Resource:
 
 1. `GET /api/users`
 2. `GET /api/users/:id`
-3. `POST /api/users` with `username` and `password`
-4. `PUT /api/users/:id` with `username` and `password`
-5. `DELETE /api/users/:id` will delete the Todos belongs to the User as well
+3. `PUT /api/users/:id` with `username` and `password`
+4. `DELETE /api/users/:id` will delete the Todos belongs to the User as well
 
 Todo Resource:
 
