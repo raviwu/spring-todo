@@ -11,6 +11,7 @@ import org.lwstudio.springtodo.service.TodoService;
 import org.lwstudio.springtodo.exception.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,7 @@ public class TodoController {
     }
 
     @GetMapping
+    @PreAuthorize("isFullyAuthenticated() and #userId == principal.id")
     public ResponseEntity<?> getTodosByUserId(@PathVariable Long userId) {
         assertUserExist(userId);
 
@@ -38,6 +40,7 @@ public class TodoController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isFullyAuthenticated() and #userId == principal.id")
     public ResponseEntity<?> getTodoById(@PathVariable Long userId, @PathVariable Long id) {
         assertUserExist(userId);
         assertTodoExist(id);
@@ -46,6 +49,7 @@ public class TodoController {
     }
 
     @PostMapping
+    @PreAuthorize("isFullyAuthenticated() and #userId == principal.id")
     public ResponseEntity<?> postTodo(@PathVariable Long userId, @RequestBody Todo todo) {
         assertUserExist(userId);
 
@@ -60,6 +64,7 @@ public class TodoController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("isFullyAuthenticated() and #userId == principal.id")
     public ResponseEntity<?> updateTodoDescriptionById(@PathVariable Long userId, @PathVariable Long id, @RequestBody Todo todo) {
         assertUserExist(userId);
         assertTodoExist(id);
@@ -72,6 +77,7 @@ public class TodoController {
     }
 
     @PutMapping("/{id}/complete")
+    @PreAuthorize("isFullyAuthenticated() and #userId == principal.id")
     public ResponseEntity<?> updateTodoDescriptionById(@PathVariable Long userId, @PathVariable Long id) {
         assertUserExist(userId);
         assertTodoExist(id);
@@ -82,6 +88,7 @@ public class TodoController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("isFullyAuthenticated() and #userId == principal.id")
     public ResponseEntity<?> deleteTodo(@PathVariable Long userId, @PathVariable Long id) {
         assertUserExist(userId);
         assertTodoExist(id);
