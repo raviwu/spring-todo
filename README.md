@@ -37,11 +37,10 @@ Todo Resource:
 
 ## TODOs
 
-1. Json should not response password key even with hashed password
-2. User Authentication Checks for the Todo Resources
-3. Request Param Validator
-4. Request Exception Handlement
-5. Testing should covers main behaviors
+1. User Authentication Checks for the Todo Resources
+2. Request Param Validator
+3. Request Exception Handlement
+4. Testing should covers main behaviors
 
 ## Run in Dev Env
 

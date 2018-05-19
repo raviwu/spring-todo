@@ -45,12 +45,9 @@ public class UserController {
                 .buildAndExpand(user.getId())
                 .toUri();
 
-        userDTO.setId(user.getId());
-        userDTO.setPassword("hash_password");
-
         return ResponseEntity
                 .created(location)
-                .body(userDTO);
+                .body(user);
     }
 
     @PutMapping("/{id}")
@@ -59,11 +56,11 @@ public class UserController {
 
         userService.modifyUserById(userDTO);
 
-        userDTO.setPassword("hash_password");
+        User user = userService.getUserByUsername(userDTO.getUsername());
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(userDTO);
+                .body(user);
     }
 
     @DeleteMapping("/{id}")

@@ -5,6 +5,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 public class User implements Serializable {
     private static final long serialVersionUID = 6805190293149476515L;
@@ -44,10 +47,12 @@ public class User implements Serializable {
         this.username = username;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }

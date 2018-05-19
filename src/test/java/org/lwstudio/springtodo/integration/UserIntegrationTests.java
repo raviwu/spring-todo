@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lwstudio.springtodo.model.entity.User;
+import org.lwstudio.springtodo.model.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -21,8 +22,8 @@ public class UserIntegrationTests {
 
     @Test
     public void getUsers() {
-        restTemplate.postForEntity("/api/users", new User("first", "password"), User.class);
-        restTemplate.postForEntity("/api/users", new User("second", "password"), User.class);
+        restTemplate.postForEntity("/api/users", new UserDTO("first", "password"), User.class);
+        restTemplate.postForEntity("/api/users", new UserDTO("second", "password"), User.class);
 
         ResponseEntity<User[]> responseEntity =
             restTemplate.getForEntity("/api/users", User[].class);
@@ -36,7 +37,7 @@ public class UserIntegrationTests {
     @Test
     public void createUser() {
         ResponseEntity<User> responseEntity =
-            restTemplate.postForEntity("/api/users", new User("Foo", "Bar"), User.class);
+            restTemplate.postForEntity("/api/users", new UserDTO("Foo", "Bar"), User.class);
 
         User user = responseEntity.getBody();
 
@@ -46,7 +47,7 @@ public class UserIntegrationTests {
 
     @Test
     public void getUserById() {
-        restTemplate.postForEntity("/api/users", new User("Wow", "New"), User.class);
+        restTemplate.postForEntity("/api/users", new UserDTO("Wow", "New"), User.class);
 
         ResponseEntity<User> getResponseEntity =
             restTemplate.getForEntity("/api/users/1", User.class);
