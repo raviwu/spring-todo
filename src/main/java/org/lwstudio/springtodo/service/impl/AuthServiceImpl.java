@@ -2,7 +2,6 @@ package org.lwstudio.springtodo.service.impl;
 
 import org.lwstudio.springtodo.security.JwtAuthenticationRequest;
 import org.lwstudio.springtodo.security.JwtTokenUtil;
-import org.lwstudio.springtodo.security.JwtUser;
 import org.lwstudio.springtodo.model.entity.User;
 import org.lwstudio.springtodo.repository.UserRepository;
 import org.lwstudio.springtodo.service.AuthService;
