@@ -1,6 +1,7 @@
 package org.lwstudio.springtodo.web.controller;
 
 import org.lwstudio.springtodo.security.JwtAuthenticationRequest;
+import org.lwstudio.springtodo.security.JwtAuthenticationResponse;
 
 import org.lwstudio.springtodo.model.entity.User;
 
@@ -28,10 +29,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws ValidationException {
+    public JwtAuthenticationResponse createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws ValidationException {
         final String token = authService.login(authenticationRequest);
 
-        return ResponseEntity.ok().body(token);
+        return new JwtAuthenticationResponse(token);
     }
 
     @PostMapping("/register")
