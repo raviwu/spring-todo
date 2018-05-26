@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.lwstudio.springtodo.security.AppPasswordEncoder;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -22,13 +22,11 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final TodoRepository todoRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, TodoRepository todoRepository) {
         this.userRepository = userRepository;
         this.todoRepository = todoRepository;
-        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override
@@ -53,7 +51,7 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("Username already exists.");
         }
 
-        String encryptedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword());
+        String encryptedPassword = AppPasswordEncoder.getBcryptEncoder().encode(userDTO.getPassword());
 
         try {
             User user = new User(
@@ -77,7 +75,7 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("New username already been used.");
         }
 
-        String encryptedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword());
+        String encryptedPassword = AppPasswordEncoder.getBcryptEncoder().encode(userDTO.getPassword());
 
         try {
             user.setUsername(userDTO.getUsername());

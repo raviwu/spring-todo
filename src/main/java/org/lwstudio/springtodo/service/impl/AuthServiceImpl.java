@@ -19,7 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.lwstudio.springtodo.security.AppPasswordEncoder;
 
 import javax.validation.ConstraintViolationException;
 
@@ -29,7 +29,6 @@ public class AuthServiceImpl implements AuthService {
     private UserDetailsService userDetailsService;
     private JwtTokenUtil jwtTokenUtil;
     private UserRepository userRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Value("Bearer ")
     private String tokenHead;
@@ -44,7 +43,6 @@ public class AuthServiceImpl implements AuthService {
         this.userDetailsService = userDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override
@@ -73,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
             throw new ValidationException("Username already exists.");
         }
 
-        String encryptedPassword = bCryptPasswordEncoder.encode(jwtAuthenticationRequest.getPassword());
+        String encryptedPassword = AppPasswordEncoder.getBcryptEncoder().encode(jwtAuthenticationRequest.getPassword());
 
         try {
             User user = new User(
