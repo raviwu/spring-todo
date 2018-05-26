@@ -5,7 +5,6 @@ import org.lwstudio.springtodo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +14,11 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         User user = userRepository.selectUserByUsername(username);
 
         if (user == null) {
-            throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
+            return JwtUserFactory.create(new User());
         } else {
             return JwtUserFactory.create(user);
         }
@@ -31,7 +30,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.selectUserById(id);
 
         if (user == null) {
-            throw new UsernameNotFoundException("User not found with id : " + id);
+            return JwtUserFactory.create(new User());
         } else {
             return JwtUserFactory.create(user);
         }
