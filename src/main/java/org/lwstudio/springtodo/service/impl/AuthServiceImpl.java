@@ -27,7 +27,6 @@ import javax.validation.ConstraintViolationException;
 public class AuthServiceImpl implements AuthService {
     private AuthenticationManager authenticationManager;
     private UserDetailsService userDetailsService;
-    private JwtTokenUtil jwtTokenUtil;
     private UserRepository userRepository;
 
     @Value("Bearer ")
@@ -37,11 +36,9 @@ public class AuthServiceImpl implements AuthService {
     public AuthServiceImpl(
                 AuthenticationManager authenticationManager,
                 UserDetailsService userDetailsService,
-                JwtTokenUtil jwtTokenUtil,
                 UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
-        this.jwtTokenUtil = jwtTokenUtil;
         this.userRepository = userRepository;
     }
 
@@ -59,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        final String token = jwtTokenUtil.generateToken(userDetails);
+        final String token = JwtTokenUtil.generateToken(userDetails);
 
         return token;
     }
