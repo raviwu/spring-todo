@@ -3,7 +3,6 @@ package org.lwstudio.springtodo.config;
 import org.lwstudio.springtodo.model.dto.ErrorDTO;
 import org.lwstudio.springtodo.exception.ResourceNotFoundException;
 import org.lwstudio.springtodo.exception.ParameterIllegalException;
-import org.lwstudio.springtodo.exception.UnauthorizedException;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -30,10 +29,10 @@ class ExceptionHandlerControllerAdvice {
                 "An invalid value was specified for one of the query parameters in the request URL."));
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
+    @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> unauthorizedExceptionHandler(HttpServletRequest request, AccessDeniedException e) {
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(HttpStatus.FORBIDDEN)
                 .body(new ErrorDTO(403,
                 "You're not authorized for this operation."));
     }
