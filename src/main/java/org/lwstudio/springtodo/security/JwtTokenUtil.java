@@ -6,6 +6,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import org.lwstudio.springtodo.exception.UnauthorizedException;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,49 +20,54 @@ public class JwtTokenUtil {
     private static final int JWT_EXPIRATION = 604800;
 
     public static String getUsernameFromToken(String token) {
-        String username;
         try {
             final Claims claims = getClaimsFromToken(token);
-            username = claims.getSubject();
+            return claims.getSubject();
         } catch (Exception e) {
-            username = null;
+            throw new UnauthorizedException("Invalid token subject.");
         }
-        return username;
     }
 
-    public static Date getCreatedDateFromToken(String token) {
-        Date created;
-        try {
-            final Claims claims = getClaimsFromToken(token);
-            created = new Date((Long) claims.get(CLAIM_KEY_CREATED));
-        } catch (Exception e) {
-            created = null;
-        }
-        return created;
+    public static String generateToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
+        claims.put(CLAIM_KEY_CREATED, new Date());
+        return generateToken(claims);
     }
 
-    public static Date getExpirationDateFromToken(String token) {
-        Date expiration;
+    public static Boolean validateToken(String token, UserDetails userDetails) {
+        if (isTokenExpired(token)) {
+            throw new UnauthorizedException("Token expired.");
+        }
+
+        JwtUser user = (JwtUser) userDetails;
+        final String username = getUsernameFromToken(token);
+
+        if (username.equals(user.getUsername())) {
+            return true;
+        } else {
+            throw new UnauthorizedException("Token credential not match.");
+        }
+    }
+
+    private static Date getExpirationDateFromToken(String token) {
         try {
             final Claims claims = getClaimsFromToken(token);
-            expiration = claims.getExpiration();
+            return claims.getExpiration();
         } catch (Exception e) {
-            expiration = null;
+            throw new UnauthorizedException("Invalid token expiration info.");
         }
-        return expiration;
     }
 
     private static Claims getClaimsFromToken(String token) {
-        Claims claims;
         try {
-            claims = Jwts.parser()
+            return Jwts.parser()
                     .setSigningKey(APP_SECRET)
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
-            claims = null;
+            throw new UnauthorizedException("Invalid token format.");
         }
-        return claims;
     }
 
     private static Date generateExpirationDate() {
@@ -72,34 +79,11 @@ public class JwtTokenUtil {
         return expiration.before(new Date());
     }
 
-    private static Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
-        return (lastPasswordReset != null && created.before(lastPasswordReset));
-    }
-
-    public static String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
-        claims.put(CLAIM_KEY_CREATED, new Date());
-        return generateToken(claims);
-    }
-
     private static String generateToken(Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
                 .signWith(SignatureAlgorithm.HS512, APP_SECRET)
                 .compact();
-    }
-
-    public static Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
-        final Date created = getCreatedDateFromToken(token);
-        return !isCreatedBeforeLastPasswordReset(created, lastPasswordReset)
-                && !isTokenExpired(token);
-    }
-
-    public static Boolean validateToken(String token, UserDetails userDetails) {
-        JwtUser user = (JwtUser) userDetails;
-        final String username = getUsernameFromToken(token);
-        return (username.equals(user.getUsername()) && !isTokenExpired(token));
     }
 }
