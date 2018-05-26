@@ -91,11 +91,7 @@ public class UserController {
         User user = userService.getUserById(userId);
 
         if (user == null) {
-            ResourceNotFoundException exception = new ResourceNotFoundException();
-            exception.setResourceName(ResourceName.USER);
-            exception.setId(userId);
-
-            throw exception;
+            throw new ResourceNotFoundException(ResourceName.USER, "Id", userId);
         }
     }
 

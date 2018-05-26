@@ -98,11 +98,7 @@ public class TodoController {
         User user = userService.getUserById(userId);
 
         if (user == null) {
-            ResourceNotFoundException exception = new ResourceNotFoundException();
-            exception.setResourceName(ResourceName.USER);
-            exception.setId(userId);
-
-            throw exception;
+            throw new ResourceNotFoundException(ResourceName.USER, "Id", userId);
         }
     }
 
@@ -110,11 +106,7 @@ public class TodoController {
         Todo todo = todoService.getTodoById(id);
 
         if (todo == null) {
-            ResourceNotFoundException exception = new ResourceNotFoundException();
-            exception.setResourceName(ResourceName.TODO);
-            exception.setId(id);
-
-            throw exception;
+            throw new ResourceNotFoundException(ResourceName.TODO, "Id", id);
         }
     }
 }
