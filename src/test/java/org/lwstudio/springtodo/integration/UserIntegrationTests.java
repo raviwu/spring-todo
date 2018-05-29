@@ -2,10 +2,14 @@ package org.lwstudio.springtodo.integration;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.lwstudio.springtodo.model.dto.ErrorDTO;
 import org.lwstudio.springtodo.model.entity.Todo;
 import org.lwstudio.springtodo.model.entity.User;
+import org.lwstudio.springtodo.repository.TodoRepository;
+import org.lwstudio.springtodo.repository.UserRepository;
 import org.lwstudio.springtodo.security.JwtAuthenticationRequest;
 import org.lwstudio.springtodo.security.JwtAuthenticationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,47 +31,173 @@ public class UserIntegrationTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TodoRepository todoRepository;
+
     @LocalServerPort
     private int port;
 
+    @Before
+    public void deleteAllUsers() {
+        for (User user : userRepository.selectAllUsers()) {
+            userRepository.deleteUserById(user.getId());
+        }
+
+        assertEquals(0, userRepository.selectAllUsers().size());
+    }
+
     @Test
-    public void registerAnAccountAndSeeTodosList() {
-        JwtAuthenticationRequest jwtRequest = new JwtAuthenticationRequest("ravi", "password");
+    public void registerAnAccountAndCrudTodo() {
+        String username = "ravi";
+        String password = "password";
 
-        restTemplate.postForEntity(
-                "/auth/register",
-                jwtRequest,
-                JwtAuthenticationRequest.class);
+        User ravi = registerAccount(username, password);
 
-        // String jwtToken = restTemplate.postForEntity(
-        //         "/auth/login",
-        //         jwtRequest,
-        //         JwtAuthenticationResponse.class).getBody().getToken();
+        assertEquals(1, userRepository.selectAllUsers().size());
 
-        // ResponseEntity<User[]> responseUsersEntity =
-        //     restTemplate.exchange(
-        //         createURLWithPort("/api/users"),
-        //         HttpMethod.GET,
-        //         new HttpEntity<Object>(generateJwtHeader(jwtToken)),
-        //         User[].class);
+        String jwtToken = loginUser(username, password);
 
-        // User[] users = responseUsersEntity.getBody();
+        ResponseEntity<User[]> responseUsersEntity =
+            restTemplate.exchange(
+                createURLWithPort("/api/users"),
+                HttpMethod.GET,
+                new HttpEntity<Object>(generateJwtHeader(jwtToken)),
+                User[].class);
 
-        // assertEquals(HttpStatus.OK, responseUsersEntity.getStatusCode());
-        // assertEquals(1, users.length);
-        // assertEquals("ravi", users[0].getUsername());
+        User[] users = responseUsersEntity.getBody();
 
-        // ResponseEntity<Todo[]> responseTodosEntity =
-        //     restTemplate.exchange(
-        //         createURLWithPort("/api/users/1/todos"),
-        //         HttpMethod.GET,
-        //         new HttpEntity<Object>(generateJwtHeader(jwtToken)),
-        //         Todo[].class);
+        assertEquals(HttpStatus.OK, responseUsersEntity.getStatusCode());
+        assertEquals(1, users.length);
+        assertEquals("ravi", users[0].getUsername());
 
-        // Todo[] todos = responseTodosEntity.getBody();
+        ResponseEntity<Todo[]> responseTodosEntity =
+            restTemplate.exchange(
+                createURLWithPort("/api/users/" + ravi.getId() + "/todos"),
+                HttpMethod.GET,
+                new HttpEntity<Object>(generateJwtHeader(jwtToken)),
+                Todo[].class);
 
-        // assertEquals(HttpStatus.OK, responseUsersEntity.getStatusCode());
-        // assertEquals(0, todos.length);
+        Todo[] emptyTodos = responseTodosEntity.getBody();
+
+        assertEquals(HttpStatus.OK, responseTodosEntity.getStatusCode());
+        assertEquals(0, emptyTodos.length);
+
+        // Create new Todo
+        String todoDescription = "This is my todo!";
+
+        ResponseEntity<Todo> newTodoEntity = restTemplate.exchange(
+                createURLWithPort("/api/users/" + ravi.getId() + "/todos"),
+                HttpMethod.POST,
+                newTodoRequestEntity(todoDescription, jwtToken),
+                Todo.class);
+
+        assertEquals(HttpStatus.CREATED, newTodoEntity.getStatusCode());
+        assertEquals(1, todoRepository.selectTodosByUserId(ravi.getId()).size());
+        assertEquals(todoDescription, newTodoEntity.getBody().getDescription());
+
+        ResponseEntity<Todo[]> responseNewTodosEntity = restTemplate.exchange(
+                createURLWithPort("/api/users/" + ravi.getId() + "/todos"), HttpMethod.GET,
+                new HttpEntity<Object>(generateJwtHeader(jwtToken)), Todo[].class);
+
+        Todo[] todos = responseNewTodosEntity.getBody();
+
+        assertEquals(HttpStatus.OK, responseNewTodosEntity.getStatusCode());
+        assertEquals(1, todos.length);
+
+        Todo todoInDatabase = todoRepository.selectTodoById(todos[0].getId());
+        assertEquals(todoDescription, todoInDatabase.getDescription());
+
+        // Delete User will Delete Todo
+        ResponseEntity<User> deletedUserEntity = restTemplate.exchange(
+                createURLWithPort("/api/users/" + ravi.getId()), HttpMethod.DELETE,
+                new HttpEntity<Object>(generateJwtHeader(jwtToken)), User.class);
+
+        assertEquals(HttpStatus.NO_CONTENT, deletedUserEntity.getStatusCode());
+        assertEquals(0, userRepository.selectAllUsers().size());
+        assertEquals(0, todoRepository.selectAllTodos().size());
+    }
+
+    @Test
+    public void authorizationChecksOnUserResources() {
+        String raviUsername = "ravi";
+        String johnUsername = "john";
+        String password = "password";
+
+        User ravi = registerAccount(raviUsername, password);
+
+        ResponseEntity<ErrorDTO> forbiddenToAccessEntity =
+            restTemplate.exchange(
+                createURLWithPort("/api/users"),
+                HttpMethod.GET,
+                new HttpEntity<Object>(generateJwtHeader("invalid Token")),
+                ErrorDTO.class);
+
+        assertEquals(HttpStatus.FORBIDDEN, forbiddenToAccessEntity.getStatusCode());
+
+        String raviJwtToken = loginUser(raviUsername, password);
+
+        ResponseEntity<User[]> responseUsersEntity = restTemplate.exchange(
+                createURLWithPort("/api/users"),
+                HttpMethod.GET,
+                new HttpEntity<Object>(generateJwtHeader(raviJwtToken)),
+                User[].class);
+
+        assertEquals(HttpStatus.OK, responseUsersEntity.getStatusCode());
+        assertEquals(1, responseUsersEntity.getBody().length);
+
+        ResponseEntity<User> getRaviUserEntity = restTemplate.exchange(
+                createURLWithPort("/api/users/" + ravi.getId()),
+                HttpMethod.GET,
+                new HttpEntity<Object>(generateJwtHeader(raviJwtToken)),
+                User.class);
+
+        assertEquals(HttpStatus.OK, getRaviUserEntity.getStatusCode());
+        assertEquals(ravi.getUsername(), getRaviUserEntity.getBody().getUsername());
+
+        ResponseEntity<Todo[]> getRaviTodosEntity = restTemplate.exchange(
+                createURLWithPort("/api/users/" + ravi.getId() + "/todos"),
+                HttpMethod.GET,
+                new HttpEntity<Object>(generateJwtHeader(raviJwtToken)),
+                Todo[].class);
+
+        assertEquals(HttpStatus.OK, getRaviTodosEntity.getStatusCode());
+
+        User john = registerAccount(johnUsername, password);
+
+        assertEquals(2, userRepository.selectAllUsers().size());
+
+        ResponseEntity<ErrorDTO> failedToGetJohnUserEntity = restTemplate.exchange(
+                createURLWithPort("/api/users/" + john.getId()),
+                HttpMethod.GET,
+                new HttpEntity<Object>(generateJwtHeader(raviJwtToken)),
+                ErrorDTO.class);
+
+        assertEquals(HttpStatus.FORBIDDEN, failedToGetJohnUserEntity.getStatusCode());
+
+        ResponseEntity<ErrorDTO> failedToGetJohnTodosEntity = restTemplate.exchange(
+                createURLWithPort("/api/users/" + john.getId() + "/todos"),
+                HttpMethod.GET,
+                new HttpEntity<Object>(generateJwtHeader(raviJwtToken)),
+                ErrorDTO.class);
+
+        assertEquals(HttpStatus.FORBIDDEN, failedToGetJohnTodosEntity.getStatusCode());
+    }
+
+    private User registerAccount(String username, String password) {
+        JwtAuthenticationRequest jwtRequest = new JwtAuthenticationRequest(username, password);
+
+        restTemplate.postForEntity("/auth/register", jwtRequest, JwtAuthenticationRequest.class).getBody().getUsername();
+
+        return userRepository.selectUserByUsername(username);
+    }
+
+    private String loginUser(String username, String password) {
+        JwtAuthenticationRequest jwtRequest = new JwtAuthenticationRequest(username, password);
+
+        return restTemplate.postForEntity("/auth/login", jwtRequest, JwtAuthenticationResponse.class).getBody().getToken();
     }
 
     private String createURLWithPort(String uri) {
@@ -83,10 +213,8 @@ public class UserIntegrationTests {
     }
 
     private HttpEntity<Object> newTodoRequestEntity(String description, String token) {
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
+        String requestBody = "{\"description\":\"" + description + "\"}";
 
-        body.add("description", description);
-
-        return new HttpEntity<Object>(body, generateJwtHeader(token));
+        return new HttpEntity<Object>(requestBody, generateJwtHeader(token));
     }
 }

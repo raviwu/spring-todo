@@ -8,6 +8,8 @@ public interface TodoRepository {
 
     List<Todo> selectTodosByUserId(Long userId);
 
+    List<Todo> selectAllTodos();
+
     Todo selectTodoById(Long id);
 
     Integer insertTodo(Todo todo);

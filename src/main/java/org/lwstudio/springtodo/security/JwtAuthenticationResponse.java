@@ -12,6 +12,11 @@ public class JwtAuthenticationResponse implements Serializable {
         this.token = token;
     }
 
+    // Introducing the dummy constructor to resolve integration test error
+    public JwtAuthenticationResponse() {
+        this.token = "dummyToken";
+    }
+
     public String getToken() {
         return token;
     }
