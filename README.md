@@ -44,8 +44,14 @@ Todo Resource:
 1. JWT should be expired if user update password
 2. Request Param Validator
 
-## Run in Dev Env
+## Run in Dev Env / Testing
 
 ```shell
+# Unix bash, zsh or fish shell
+mvn clean test -Dspring.profiles.active=test -B
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
+
+# Windows PowerShell
+mvn clean test -D'spring.profiles.active=test' -B
+mvn spring-boot:run -D'spring-boot.run.profiles=dev'
 ```
